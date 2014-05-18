@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Generate Bankstat test-data</title>
+        
+        <script type='text/javascript' src='http://code.jquery.com/jquery-git2.js'></script>
+        
+        <script type='text/javascript'>
+        $(window).load(function() {
+            var c = $('#content');
+            var content = "";
+            var append = function(date1, date2, msg, amount, result) {
+                content += date1 + "\t" + date2 + " \t" + msg + " \t \t" + amount + "\t" + result + "\n";
+            }
+
+            var years = [13, 14];
+            var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            var days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28];
+            var words = ['Restaurang', 'AB', 'Överföring', 'Swish', 'HOTEL', 'ClothesBrand', 'Amazon', 'Cafe', 'Systemföretaget', 'Bolag', 'Donation', 'Spara', 'Mat', 'Lunch', 'Apple', 'Google', 'Microsoft', 'Waynes', 'Coffee', 'Kaffe', 'Fika', 'Lån', 'Swedbank', 'Handelsbanken'];
+
+            var result = 10000;
+
+            var startTime = new Date();
+
+            $.each(years, function(year) {
+                year = years[year];
+
+                $.each(months, function(month) {
+                    month = months[month];
+
+                    $.each(days, function(day) {
+                        day = days[day];
+
+                        var items = Math.random() * 4;
+                        for (var i = 0; i < items; i++) {
+                            var sign = Math.random() > 0.85 ? 1 : -1;
+                            var date = "" + year + "-" + (month < 10 ? '0' + month : month) + "-" + (day < 10 ? '0' + day : day);
+                            var msgLen = Math.ceil(Math.random() * 3);
+                            var msg = "";
+
+                            for (var m = 0; m < msgLen; m++) {
+                                msg += " " + words[Math.floor(Math.random() * words.length)];
+                            }
+
+                            var amount = sign * (Math.floor(Math.random() * 200 + 50));
+                            result += amount;
+                            append(date, date, msg, amount, result);
+                        }
+                    });
+
+                    var salary = Math.floor(Math.random() * 5000 + 15000);
+                    result += salary;
+                    var date = "" + year + "-" + (month < 10 ? '0' + month : month) + "-25";
+                    
+                    append(date, date, " LÖN", salary, result);
+                    
+                    var save = 20000;
+                    var canSaveThisMonth = result > save && Math.random() > 0.4;
+                    if (canSaveThisMonth) {
+                        result -= save;
+                        var date = "" + year + "-" + (month < 10 ? '0' + month : month) + "-28";
+                        append(date, date, " Överföring till Sparkonto", -1 * save, result);
+                    }
+                });
+            });
+
+            c.html(content);
+            
+            var stopTime = new Date();
+            $('#time').html("" + (stopTime - startTime)/1000);
+
+        });
+        </script>
+    </head>
+    <body>
+        <h1>Generated bank statistics test-data</h1>
+        <p><a href="" onclick="window.location.reload()">Re-generate</a></p>
+        <pre id="content"></pre>
+        <footer>Generated in <span id="time"></span> seconds <br><br> The purpose of this page is to generate test-data for another project. <br> You can use this code however you which. <br> Johan Deckmar, 2014 </footer>
+    </body>
+</html>
